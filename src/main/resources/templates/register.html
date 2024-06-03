@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dental Cabinet Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F7FBFF;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1E5B8F;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+
+        .alert-danger {
+            background-color: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
+        }
+
+        form input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        input[type="submit"] {
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #184A73;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Dental Cabinet Registration</h1>
+    <!-- Success or error message -->
+    <div th:if="${success}" th:text="${success}" class="alert alert-success"></div>
+    <div th:if="${error}" th:text="${error}" class="alert alert-danger"></div>
+    <!-- Form to register a new Personne and Utilisateur -->
+    <form th:action="@{/register}" th:object="${utilisateur}" th:method="post">
+        <input type="text" th:field="*{personne.nom}" placeholder="Nom" required/>
+        <input type="text" th:field="*{personne.prenom}" placeholder="Prenom" required/>
+        <input type="text" th:field="*{personne.adresse}" placeholder="Adresse" required/>
+        <input type="text" th:field="*{personne.telephone}" placeholder="Telephone" required/>
+        <input type="email" th:field="*{personne.email}" placeholder="Email" required/>
+        <input type="text" th:field="*{personne.sexe}" placeholder="Sexe" required/>
+        <input type="date" th:field="*{personne.dateNaissance}" required/>
+        <input type="text" th:field="*{username}" placeholder="Username" required/>
+        <input type="password" th:field="*{password}" placeholder="Password" required/>
+        <input type="submit" value="Register"/>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Cabinet Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F7FBFF;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #1E5B8F;
+            color: #fff;
+            padding: 20px;
+            width: 200px;
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .logo img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar nav ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .content h1 {
+            color: #1E5B8F;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-btn i {
+            font-size: 20px;
+        }
+
+        .toggle-btn.rotated {
+            transform: rotate(180deg);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+
+        .user-info .username {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info .username i {
+            margin-right: 5px;
+        }
+
+        .user-info .logout {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info .logout:hover {
+            color: #f5f5f5;
+        }
+
+        .user-info .logout i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+<button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/3035/3035720.png" alt="Dental Cabinet Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
+                    <li><a href="/patients"><i class="fas fa-user-injured"></i>Patients</a></li>
+                    <li><a href="#"><i class="fas fa-tooth"></i>Treatments</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i>Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user-info">
+            <div class="username">
+                <i class="fas fa-user"></i>
+                <span th:text="${username}">John Doe</span>
+            </div>
+            <a href="#" class="logout" onclick="logoutUser()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+    <div class="content">
+        <h1>Welcome to Dental Cabinet Dashboard</h1>
+        <p>This is the main dashboard area where you can view and manage various aspects of your dental practice.</p>
+        <!-- Add your dashboard content here -->
+    </div>
+</div>
+<script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
+
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        toggleBtn.classList.toggle('rotated');
+    });
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            sidebarLinks.forEach(link => link.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+
+    function logoutUser() {
+        // Add your logout functionality here
+        alert('Logout clicked!');
+    }
+</script>
+</body>
+</html>
