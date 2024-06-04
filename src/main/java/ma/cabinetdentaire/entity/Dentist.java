@@ -23,6 +23,7 @@ public class Dentist {
     @Enumerated(EnumType.STRING)
     private List<Specialite> specialite;
     private Assurance assurance;
+    @Enumerated(EnumType.STRING)
     private StatutEmploye statutActuel;
 }
 

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dental Cabinet-Dentists</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F7FBFF;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #1E5B8F;
+            color: #fff;
+            padding: 20px;
+            width: 200px;
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .logo img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar nav ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar nav ul li a i {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content h1 {
+            color: #1E5B8F;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            display: block;
+            width: 0px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #174a72;
+        }
+
+        .table-container {
+            flex-grow: 1;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-btn i {
+            font-size: 20px;
+        }
+
+        .toggle-btn.rotated {
+            transform: rotate(180deg);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-top: 20px;
+            justify-content: space-between;
+        }
+
+        .user-info .username {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info .username i {
+            margin-right: 5px;
+        }
+
+        .user-info .logout {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info .logout:hover {
+            color: #f5f5f5;
+        }
+
+        .user-info .logout i {
+            margin-right: 5px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .button-container button {
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .button-container button:hover {
+            background-color: #174a72;
+        }
+    </style>
+</head>
+<body>
+<button class="toggle-btn" id="toggleBtn"><i class="fas fa-bars"></i></button>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="logo">
+                <img src="https://cdn-icons-png.flaticon.com/512/3035/3035720.png" alt="Dental Cabinet Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
+                    <li><a href="/patients"><i class="fas fa-user-injured"></i>Patients</a></li>
+                    <li><a href="#"><i class="fas fa-tooth"></i>Treatments</a></li>
+                    <li><a href="/dentists" class="active"><i class="fas fa-user-md"></i>Dentists</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user-info">
+            <div class="username">
+                <i class="fas fa-user"></i>
+                <span th:text="${username}">John Doe</span>
+            </div>
+            <a href="#" class="logout" onclick="logoutUser()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+    <div class="content">
+        <h1>Dentists</h1>
+        <div class="button-container">
+            <button id="showDentistsBtn">Show Dentists</button>
+            <button id="createDentistBtn">Create Dentist</button>
+        </div>
+        <div class="form-container" style="display: none;">
+            <!-- Form for creating a new dentist -->
+            <form action="#" th:action="@{/dentists}" th:object="${dentist}" method="post" style="display: flex; flex-wrap: wrap;">
+                <div style="flex: 1 0 100%; margin-bottom: 20px;">
+                    <h3>Personal Information</h3>
+                    <div style="display: flex; flex-wrap: wrap;">
+                        <input type="text" th:field="*{utilisateur.personne.nom}" placeholder="Nom" style="flex: 1; margin-right: 10px;" />
+                        <input type="text" th:field="*{utilisateur.personne.prenom}" placeholder="Prenom" style="flex: 1; margin-right: 10px;" />
+                        <input type="text" th:field="*{utilisateur.personne.adresse}" placeholder="Adresse" style="flex: 1 0 100%; margin-right: 10px;" />
+                        <input type="text" th:field="*{utilisateur.personne.telephone}" placeholder="Telephone" style="flex: 1; margin-right: 10px;" />
+                        <input type="text" th:field="*{utilisateur.personne.email}" placeholder="Email" style="flex: 1; margin-right: 10px;" />
+                        <input type="text" th:field="*{utilisateur.username}" placeholder="Username" style="flex: 1; margin-right: 10px;" />
+                        <input type="password" th:field="*{utilisateur.password}" placeholder="Password" style="flex: 1; margin-right: 10px;" />
+                    </div>
+                </div>
+
+                <div style="flex: 1 0 100%; margin-bottom: 20px;">
+                    <h3>Professional Information</h3>
+                    <div style="display: flex; flex-wrap: wrap;">
+                        <select th:field="*{assurance}" style="flex: 1; margin-right: 10px;">
+                            <option value="">Select Assurance</option>
+                            <option th:each="assurance : ${T(ma.cabinetdentaire.entity.Assurance).values()}" th:value="${assurance}" th:text="${assurance}"></option>
+                        </select>
+                        <select th:field="*{statutActuel}" style="flex: 1; margin-right: 10px;">
+                            <option value="">Select Statut Employe</option>
+                            <option th:each="statut : ${T(ma.cabinetdentaire.entity.StatutEmploye).values()}" th:value="${statut}" th:text="${statut}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="submit" value="Submit" style="flex: 1;" />
+            </form>
+        </div>
+        <div class="table-container">
+            <!-- Table of existing dentists -->
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Assurance</th>
+                    <th>Statut Employe</th>
+                    <!-- Add table headers for other fields as needed -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dentist : ${dentists}">
+                    <td th:text="${dentist.id}"></td>
+                    <td th:text="${dentist.utilisateur.personne.nom}"></td>
+                    <td th:text="${dentist.utilisateur.personne.prenom}"></td>
+                    <td th:text="${dentist.assurance}"></td>
+                    <td th:text="${dentist.statutActuel}"></td>
+                    <!-- Add table cells for other fields as needed -->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    const toggleBtn = document.getElementById('toggleBtn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
+    const formContainer = document.querySelector('.form-container');
+    const tableContainer = document.querySelector('.table-container');
+    const showPatientsBtn = document.getElementById('showDentistsBtn');
+    const createPatientBtn = document.getElementById('createDentistBtn');
+
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        toggleBtn.classList.toggle('rotated');
+    });
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            sidebarLinks.forEach(link => link.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+
+    function logoutUser() {
+        // Add your logout functionality here
+        alert('Logout clicked!');
+    }
+
+    showPatientsBtn.addEventListener('click', () => {
+        formContainer.style.display = 'none';
+        tableContainer.style.display = 'block';
+    });
+
+    createPatientBtn.addEventListener('click', () => {
+        formContainer.style.display = 'block';
+        tableContainer.style.display = 'none';
+    });
+</script></body>
+</html>
