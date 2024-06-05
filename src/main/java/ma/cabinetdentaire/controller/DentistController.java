@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,9 @@ public class DentistController {
         model.addAttribute("dentists", dentists);
         Dentist dentist = new Dentist();
         dentist.setUtilisateur(new Utilisateur());
+        LocalDate today = LocalDate.now();
+        DayOfWeek selectedDay = today.getDayOfWeek();
+        model.addAttribute("selectedDay", selectedDay.name());
         model.addAttribute("dentist", dentist);
         return "dentists";
     }

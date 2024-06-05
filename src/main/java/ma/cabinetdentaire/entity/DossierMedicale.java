@@ -25,6 +25,7 @@ public class DossierMedicale {
 
     @OneToMany(mappedBy = "dossierMedicale")
     private List<SituationFinanciere> situationFinancieres;
+    @Enumerated(EnumType.STRING)
     private StatusPaiement statusPaiement;
 
 }

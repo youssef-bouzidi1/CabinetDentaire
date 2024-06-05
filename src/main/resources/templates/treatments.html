@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Cabinet-Dentists</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Cabinet - Treatments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: 'Nunito', sans-serif;
@@ -90,36 +91,7 @@
             margin-bottom: 20px;
         }
 
-        .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
 
-        .form-container input,
-        .form-container textarea {
-            display: block;
-            width: 0px;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .form-container input[type="submit"] {
-            background-color: #1E5B8F;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-container input[type="submit"]:hover {
-            background-color: #174a72;
-        }
 
         .table-container {
             flex-grow: 1;
@@ -233,8 +205,8 @@
                     <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                     <li><a href="#"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
                     <li><a href="/patients"><i class="fas fa-user-injured"></i>Patients</a></li>
-                    <li><a href="#"><i class="fas fa-tooth"></i>Treatments</a></li>
-                    <li><a href="/dentists" class="active"><i class="fas fa-user-md"></i>Dentists</a></li>
+                    <li><a href="/treatments" class="active"><i class="fas fa-tooth"></i>Treatments</a></li>
+                    <li><a href="/dentists"><i class="fas fa-user-md"></i>Dentists</a></li>
                     <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
                 </ul>
             </nav>
@@ -251,84 +223,43 @@
         </div>
     </div>
     <div class="content">
-        <h1>Dentists</h1>
+        <h1>Treatments</h1>
         <div class="button-container">
-            <button id="showDentistsBtn">Show Dentists</button>
-            <button id="createDentistBtn">Create Dentist</button>
+            <button id="showTreatmentsBtn">Show Treatments</button>
+            <button id="createTreatmentBtn">Create Treatment</button>
         </div>
         <div class="form-container" style="display: none;">
-            <!-- Form for creating a new dentist -->
-            <form action="#" th:action="@{/dentists}" th:object="${dentist}" method="post" style="display: flex; flex-wrap: wrap;">
-                <div style="flex: 1 0 100%; margin-bottom: 20px;">
-                    <h3>Personal Information</h3>
-                    <div style="display: flex; flex-wrap: wrap;">
-                        <input type="text" th:field="*{utilisateur.personne.nom}" placeholder="Nom" style="flex: 1; margin-right: 10px;" />
-                        <input type="text" th:field="*{utilisateur.personne.prenom}" placeholder="Prenom" style="flex: 1; margin-right: 10px;" />
-                        <input type="text" th:field="*{utilisateur.personne.adresse}" placeholder="Adresse" style="flex: 1 0 100%; margin-right: 10px;" />
-                        <input type="text" th:field="*{utilisateur.personne.telephone}" placeholder="Telephone" style="flex: 1; margin-right: 10px;" />
-                        <input type="text" th:field="*{utilisateur.personne.email}" placeholder="Email" style="flex: 1; margin-right: 10px;" />
-                        <input type="text" th:field="*{utilisateur.username}" placeholder="Username" style="flex: 1; margin-right: 10px;" />
-                        <input type="password" th:field="*{utilisateur.password}" placeholder="Password" style="flex: 1; margin-right: 10px;" />
-                    </div>
-                </div>
-
-                <div style="flex: 1 0 100%; margin-bottom: 20px;">
-                    <h3>Professional Information</h3>
-                    <div style="display: flex; flex-wrap: wrap;">
-                        <select th:field="*{assurance}" style="flex: 1; margin-right: 10px;">
-                            <option value="">Select Assurance</option>
-                            <option th:each="assurance : ${T(ma.cabinetdentaire.entity.Assurance).values()}" th:value="${assurance}" th:text="${assurance}"></option>
-                        </select>
-                        <select th:field="*{statutActuel}" style="flex: 1; margin-right: 10px;">
-                            <option value="">Select Statut Employe</option>
-                            <option th:each="statut : ${T(ma.cabinetdentaire.entity.StatutEmploye).values()}" th:value="${statut}" th:text="${statut}"></option>
-                        </select>
-                        <select th:field="*{specialite}" style="flex: 1; margin-right: 10px;">
-                            <option value="">Select Specialite</option>
-                            <option th:each="specialite : ${T(ma.cabinetdentaire.entity.Specialite).values()}" th:value="${specialite}" th:text="${specialite}"></option>
-                        </select>
-                        <div th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}">
-                            <label th:for="${#strings.toLowerCase(dayOfWeek.name())}" th:text="${dayOfWeek.name()}"></label>
-                            <select th:field="*{disponibilite[__${dayOfWeek.name()}__]}" id="${#strings.toLowerCase(dayOfWeek.name())}">
-                                <option value="">Select Disponibilite</option>
-                                <option th:each="disponibilite : ${T(ma.cabinetdentaire.entity.Disponibilite).values()}" th:value="${disponibilite}" th:text="${disponibilite}"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <input type="submit" value="Submit" style="flex: 1;" />
+            <!-- Form for creating a new treatment -->
+            <form action="#" th:action="@{/treatments}" th:object="${consultation}" method="post">
+                <input type="date" th:field="*{dateConsultation}" placeholder="Date Consultation" />
+                <select th:field="*{dossierMedicale.id}">
+                    <option value="">Select Dossier Medicale</option>
+                    <option th:each="dossier : ${dossiersMedicales}" th:value="${dossier.id}" th:text="${dossier.id}"></option>
+                </select>
+                <select th:field="*{typeConsultation}">
+                    <option value="">Select Type Consultation</option>
+                    <option th:each="type : ${T(ma.cabinetdentaire.entity.TypeConsultation).values()}" th:value="${type}" th:text="${type}"></option>
+                </select>
+                <input type="submit" value="Submit" />
             </form>
         </div>
         <div class="table-container">
-            <!-- Table of existing dentists -->
+            <!-- Table of existing treatments -->
             <table>
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Assurance</th>
-                    <th>Statut Employe</th>
-                    <th>Specialité</th>
-                    <th>Disponibilité</th>
+                    <th>Date Consultation</th>
+                    <th>Dossier Medicale</th>
+                    <th>Type Consultation</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="dentist : ${dentists}">
-                    <td th:text="${dentist.id}"></td>
-                    <td th:text="${dentist.utilisateur.personne.nom}"></td>
-                    <td th:text="${dentist.utilisateur.personne.prenom}"></td>
-                    <td th:text="${dentist.assurance}"></td>
-                    <td th:text="${dentist.statutActuel}"></td>
-                    <td>
-                        <span th:each="specialite : ${dentist.specialite}" th:text="${specialite}"> , </span>
-                    </td>
-                    <td>
-                        <div th:each="dayOfWeek : ${T(java.time.DayOfWeek).values()}" th:with="availability=${dentist.disponibilite.get(dayOfWeek)}">
-                            <span th:if="${availability != null}" th:text="${dayOfWeek.name().substring(0, 3) + ': ' + availability}"></span>
-                        </div>
-                    </td>
+                <tr th:each="consultation : ${consultations}">
+                    <td th:text="${consultation.id}"></td>
+                    <td th:text="${consultation.dateConsultation}"></td>
+                    <td th:text="${consultation.dossierMedicale.id}"></td>
+                    <td th:text="${consultation.typeConsultation}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -341,8 +272,8 @@
     const sidebarLinks = document.querySelectorAll('.sidebar nav ul li a');
     const formContainer = document.querySelector('.form-container');
     const tableContainer = document.querySelector('.table-container');
-    const showPatientsBtn = document.getElementById('showDentistsBtn');
-    const createPatientBtn = document.getElementById('createDentistBtn');
+    const showTreatmentsBtn = document.getElementById('showTreatmentsBtn');
+    const createTreatmentBtn = document.getElementById('createTreatmentBtn');
 
     toggleBtn.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
@@ -361,15 +292,15 @@
         alert('Logout clicked!');
     }
 
-
-    showPatientsBtn.addEventListener('click', () => {
+    showTreatmentsBtn.addEventListener('click', () => {
         formContainer.style.display = 'none';
         tableContainer.style.display = 'block';
     });
 
-    createPatientBtn.addEventListener('click', () => {
+    createTreatmentBtn.addEventListener('click', () => {
         formContainer.style.display = 'block';
         tableContainer.style.display = 'none';
     });
-</script></body>
+</script>
+</body>
 </html>

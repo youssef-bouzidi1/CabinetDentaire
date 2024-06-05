@@ -5,6 +5,7 @@ import ma.cabinetdentaire.repository.DossierMedicaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,9 @@ public class DossierMedicalsService {
 
     public void deleteById(Long id) {
         dossierMedicaleRepository.deleteById(id);
+    }
+
+    public List<DossierMedicale> findAll() {
+        return dossierMedicaleRepository.findAll();
     }
 }

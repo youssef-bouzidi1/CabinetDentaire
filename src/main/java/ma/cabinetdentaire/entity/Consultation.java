@@ -17,7 +17,7 @@ public class Consultation {
     private DossierMedicale dossierMedicale;
 
     @Enumerated(EnumType.STRING)
-    private TypeConsultation typeConsultation;
+    private TypeConsultation typeConsultation= TypeConsultation.TEST;
 
     @OneToMany(mappedBy = "consultation")
     private List<InterventionMedicale> interventionMedicales;
