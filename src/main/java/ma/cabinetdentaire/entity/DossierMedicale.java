@@ -17,7 +17,7 @@ public class DossierMedicale {
     private Dentist medecinTraitant;
     private String numDossier;
 
-    @OneToOne
+    @OneToOne(mappedBy = "dossierMedicals", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Patient patient;
 
     @OneToMany(mappedBy = "dossierMedicale")

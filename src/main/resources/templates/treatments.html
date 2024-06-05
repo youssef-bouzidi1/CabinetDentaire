@@ -240,6 +240,22 @@
                     <option value="">Select Type Consultation</option>
                     <option th:each="type : ${T(ma.cabinetdentaire.entity.TypeConsultation).values()}" th:value="${type}" th:text="${type}"></option>
                 </select>
+
+                <!-- Facture input fields -->
+                <div id="factureFields">
+                    <div class="facture-field">
+                        <input type="number" name="factures[0].montantTotale" placeholder="Montant Totale" />
+                        <input type="number" name="factures[0].montantPaye" placeholder="Montant Paye" />
+                        <input type="date" name="factures[0].dateFacturation" placeholder="Date Facturation" />
+                        <select name="factures[0].typePaiement">
+                            <option value="">Select Type Paiement</option>
+                            <option th:each="type : ${T(ma.cabinetdentaire.entity.TypePaiement).values()}" th:value="${type}" th:text="${type}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" id="addFactureField">Add Facture</button>
+
                 <input type="submit" value="Submit" />
             </form>
         </div>
@@ -252,14 +268,20 @@
                     <th>Date Consultation</th>
                     <th>Dossier Medicale</th>
                     <th>Type Consultation</th>
+                    <th>Montant Totale</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="consultation : ${consultations}">
                     <td th:text="${consultation.id}"></td>
                     <td th:text="${consultation.dateConsultation}"></td>
-                    <td th:text="${consultation.dossierMedicale.id}"></td>
+                    <td th:text="${consultation.dossierMedicale.numDossier}"></td>
                     <td th:text="${consultation.typeConsultation}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="facture : ${consultation.factures}" th:text="${facture.montantTotale}"></li>
+                        </ul>
+                    </td>
                 </tr>
                 </tbody>
             </table>

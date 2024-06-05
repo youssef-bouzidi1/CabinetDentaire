@@ -21,7 +21,8 @@ public class Patient {
         @Enumerated(EnumType.STRING)
         private Mutuelle mutuelle;
 
-        @OneToOne(fetch = FetchType.EAGER,mappedBy = "patient")
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "PATIENT_ID")
         private DossierMedicale dossierMedicals;
 
         private String antecedentMedicals;
