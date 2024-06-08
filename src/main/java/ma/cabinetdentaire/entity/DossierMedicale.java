@@ -28,5 +28,6 @@ public class DossierMedicale {
     @Enumerated(EnumType.STRING)
     private StatusPaiement statusPaiement;
 
+
 }
 

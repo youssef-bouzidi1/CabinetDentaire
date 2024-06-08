@@ -1,10 +1,12 @@
 package ma.cabinetdentaire.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 public class Caisse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

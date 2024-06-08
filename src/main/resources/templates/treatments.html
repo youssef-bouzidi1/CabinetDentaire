@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <header>
+        <meta th:name="_csrf" th:content="${_csrf.token}"/>
+        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    </header>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dental Cabinet - Treatments</title>
@@ -18,7 +23,7 @@
 
         .container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -30,6 +35,10 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: sticky;
+            top: 0;
+            left: 0;
+            height: 100vh;
         }
 
         .sidebar.collapsed {
@@ -91,7 +100,36 @@
             margin-bottom: 20px;
         }
 
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
 
+        .form-container input,
+        .form-container textarea {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #1E5B8F;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #174a72;
+        }
 
         .table-container {
             flex-grow: 1;
@@ -170,6 +208,7 @@
         .user-info .logout i {
             margin-right: 5px;
         }
+
         .button-container {
             display: flex;
             justify-content: flex-end;
@@ -190,6 +229,15 @@
         .button-container button:hover {
             background-color: #174a72;
         }
+
+        .editable {
+            background-color: #f9f9f9;
+        }
+
+        .editable:focus {
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -203,7 +251,6 @@
             <nav>
                 <ul>
                     <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
                     <li><a href="/patients"><i class="fas fa-user-injured"></i>Patients</a></li>
                     <li><a href="/treatments" class="active"><i class="fas fa-tooth"></i>Treatments</a></li>
                     <li><a href="/dentists"><i class="fas fa-user-md"></i>Dentists</a></li>
@@ -229,34 +276,54 @@
             <button id="createTreatmentBtn">Create Treatment</button>
         </div>
         <div class="form-container" style="display: none;">
-            <!-- Form for creating a new treatment -->
+            <h2>Create New Treatment</h2>
             <form action="#" th:action="@{/treatments}" th:object="${consultation}" method="post">
-                <input type="date" th:field="*{dateConsultation}" placeholder="Date Consultation" />
-                <select th:field="*{dossierMedicale.id}">
-                    <option value="">Select Dossier Medicale</option>
-                    <option th:each="dossier : ${dossiersMedicales}" th:value="${dossier.id}" th:text="${dossier.id}"></option>
-                </select>
-                <select th:field="*{typeConsultation}">
-                    <option value="">Select Type Consultation</option>
-                    <option th:each="type : ${T(ma.cabinetdentaire.entity.TypeConsultation).values()}" th:value="${type}" th:text="${type}"></option>
-                </select>
-
-                <!-- Facture input fields -->
+                <div class="form-group" style="flex: 1; margin-right: 10px;">
+                    <label for="dateConsultation">Date Consultation</label>
+                    <input type="date" id="dateConsultation" th:field="*{dateConsultation}" required>
+                </div>
+                <div class="form-group">
+                    <label for="dossierMedicale">Dossier Medicale</label>
+                    <select id="dossierMedicale" th:field="*{dossierMedicale.id}" required>
+                        <option value="">Select Dossier Medicale</option>
+                        <option th:each="dossier : ${dossiersMedicales}" th:value="${dossier.id}" th:text="${dossier.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="typeConsultation">Type Consultation</label>
+                    <select id="typeConsultation" th:field="*{typeConsultation}" required>
+                        <option value="">Select Type Consultation</option>
+                        <option th:each="type : ${T(ma.cabinetdentaire.entity.TypeConsultation).values()}" th:value="${type}" th:text="${type}"></option>
+                    </select>
+                </div>
                 <div id="factureFields">
+                    <h3>Factures</h3>
                     <div class="facture-field">
-                        <input type="number" name="factures[0].montantTotale" placeholder="Montant Totale" />
-                        <input type="number" name="factures[0].montantPaye" placeholder="Montant Paye" />
-                        <input type="date" name="factures[0].dateFacturation" placeholder="Date Facturation" />
-                        <select name="factures[0].typePaiement">
-                            <option value="">Select Type Paiement</option>
-                            <option th:each="type : ${T(ma.cabinetdentaire.entity.TypePaiement).values()}" th:value="${type}" th:text="${type}"></option>
-                        </select>
+                        <div class="form-group">
+                            <label for="montantTotale">Montant Totale</label>
+                            <input type="number" name="factures[0].montantTotale" placeholder="Montant Totale" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="montantPaye">Montant Paye</label>
+                            <input type="number" name="factures[0].montantPaye" placeholder="Montant Paye" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFacturation">Date Facturation</label>
+                            <input type="date" name="factures[0].dateFacturation" placeholder="Date Facturation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="typePaiement">Type Paiement</label>
+                            <select name="factures[0].typePaiement" required>
+                                <option value="">Select Type Paiement</option>
+                                <option th:each="type : ${T(ma.cabinetdentaire.entity.TypePaiement).values()}" th:value="${type}" th:text="${type}"></option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-
-                <button type="button" id="addFactureField">Add Facture</button>
-
-                <input type="submit" value="Submit" />
+                <button type="button" id="addFactureField" class="btn btn-secondary">Add Facture</button>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </div>
             </form>
         </div>
         <div class="table-container">
@@ -268,23 +335,46 @@
                     <th>Date Consultation</th>
                     <th>Dossier Medicale</th>
                     <th>Type Consultation</th>
+                    <th>Date Facturation</th>
                     <th>Montant Totale</th>
+                    <th>Montant Paye</th>
+                    <th>Montant Restant</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="consultation : ${consultations}">
-                    <td th:text="${consultation.id}"></td>
-                    <td th:text="${consultation.dateConsultation}"></td>
-                    <td th:text="${consultation.dossierMedicale.numDossier}"></td>
-                    <td th:text="${consultation.typeConsultation}"></td>
+                    <td><span th:text="${consultation.id}"></span></td>
+                    <td contenteditable="true" class="editable" th:text="${consultation.dateConsultation}"></td>
+                    <td contenteditable="true" class="editable" th:text="${consultation.dossierMedicale.numDossier}"></td>
+                    <td contenteditable="true" class="editable" th:text="${consultation.typeConsultation}"></td>
                     <td>
                         <ul>
-                            <li th:each="facture : ${consultation.factures}" th:text="${facture.montantTotale}"></li>
+                            <li contenteditable="true" class="editable" th:each="facture : ${consultation.factures}" th:text="${facture.dateFacturation}"></li>
                         </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li contenteditable="true" class="editable" th:each="facture : ${consultation.factures}" th:text="${facture.montantTotale}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li contenteditable="true" class="editable" th:each="facture : ${consultation.factures}" th:text="${facture.montantPaye}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li contenteditable="true" class="editable" th:each="facture : ${consultation.factures}" th:text="${facture.montantRestant}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <button class="save-btn" data-id="${consultation.id}">Delete</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
         </div>
     </div>
 </div>
@@ -323,6 +413,53 @@
         formContainer.style.display = 'block';
         tableContainer.style.display = 'none';
     });
+    document.querySelectorAll('.save-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const row = button.closest('tr');
+            const id = button.dataset.id; // تأكد من وجود قيمة صحيحة هنا
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            // تأكد من عمودية القيم
+            const data = {
+                id: 1,
+                dateConsultation: row.cells[1].innerText.trim(),
+                dossierMedicale: row.cells[2].innerText.trim(),
+                typeConsultation: row.cells[3].innerText.trim(),
+                factures: Array.from(row.cells[4].querySelectorAll('li')).map((li, index) => ({
+                    dateFacturation: li.innerText.trim(),
+                    montantTotale: row.cells[5].querySelectorAll('li')[index].innerText.trim(),
+                    montantPaye: row.cells[6].querySelectorAll('li')[index].innerText.trim(),
+                    montantRestant: row.cells[7].querySelectorAll('li')[index].innerText.trim()
+                }))
+            };
+
+            // التحقق من صحة البيانات قبل الإرسال
+            console.log(data);
+
+            fetch(`/treatments/1`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Changes saved successfully');
+                    } else {
+                        return response.json().then(error => {
+                            alert(`Failed to save changes: ${error.message}`);
+                        });
+                    }
+                })
+                .catch(error => {
+                    alert(`Failed to save changes: ${error.message}`);
+                });
+        });
+    });
+
 </script>
 </body>
 </html>

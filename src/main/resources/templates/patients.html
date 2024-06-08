@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+</header>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -219,6 +224,13 @@
         .button-container button:hover {
             background-color: #174a72;
         }
+        .editable {
+            background-color: #f9f9f9;
+        }
+        .editable:focus {
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -232,9 +244,8 @@
             <nav>
                 <ul>
                     <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-calendar-alt"></i>Appointments</a></li>
                     <li><a href="/patients" class="active"><i class="fas fa-user-injured"></i>Patients</a></li>
-                    <li><a href="#"><i class="fas fa-tooth"></i>Treatments</a></li>
+                    <li><a href="/treatments"><i class="fas fa-tooth"></i>Treatments</a></li>
                     <li><a href="/dentists"><i class="fas fa-user-md"></i>Dentists</a></li>
                     <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
                 </ul>
@@ -257,8 +268,9 @@
             <button id="showPatientsBtn">Show Patients</button>
             <button id="createPatientBtn">Create Patient</button>
         </div>
-        <div class="form-container" style="display: none;">            <!-- Form for creating a new patient -->
-            <form action="#" th:action="@{/patients}" th:object="${patient}" method="post" style="display: flex; flex-wrap: wrap;">
+        <div class="form-container" style="display: none;">
+            <!-- Form for creating a new patient -->
+            <form id="patientForm" action="#" th:action="@{/patients}" th:object="${patient}" method="post" style="display: flex; flex-wrap: wrap;">
                 <div style="flex: 1 0 100%; margin-bottom: 20px;">
                     <h3>Personal Information</h3>
                     <div style="display: flex; flex-wrap: wrap;">
@@ -286,7 +298,8 @@
                 <input type="submit" value="Submit" style="flex: 1;" />
             </form>
         </div>
-        <div class="table-container">            <!-- Table of existing patients -->
+        <div class="table-container">
+            <!-- Table of existing patients -->
             <table>
                 <thead>
                 <tr>
@@ -300,10 +313,13 @@
                 <tbody>
                 <tr th:each="patient : ${patients}">
                     <td th:text="${patient.id}"></td>
-                    <td th:text="${patient.mutuelle}"></td>
-                    <td th:text="${patient.groupSanguin}"></td>
-                    <td th:text="${patient.antecedentMedicals}"></td>
-                    <td th:text="${patient.dossierMedicals?.numDossier}"></td>
+                    <td class="editable" contenteditable="true" onblur="updatePatient(this)" th:data-id="${patient.id}" th:data-field="mutuelle" th:text="${patient.mutuelle}"></td>
+                    <td class="editable" contenteditable="true" onblur="updatePatient(this)" th:data-id="${patient.id}" th:data-field="groupSanguin" th:text="${patient.groupSanguin}"></td>
+                    <td class="editable" contenteditable="true" onblur="updatePatient(this)" th:data-id="${patient.id}" th:data-field="antecedentMedicals" th:text="${patient.antecedentMedicals}"></td>
+                    <td class="editable" contenteditable="true" onblur="updatePatient(this)" th:data-id="${patient.id}" th:data-field="dossierMedicals.numDossier" th:text="${patient.dossierMedicals?.numDossier}"></td>
+                    <td>
+                        <button onclick="deletePatient(this)" th:data-id="${patient.id}">Delete</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -345,6 +361,62 @@
         formContainer.style.display = 'block';
         tableContainer.style.display = 'none';
     });
+
+    function updatePatient(cell) {
+        const patientId = cell.getAttribute('data-id');
+        const field = cell.getAttribute('data-field');
+        const newValue = cell.innerText;
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        const data = {};
+        data[field] = newValue;
+
+        fetch(`/patients/${patientId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Patient updated successfully');
+                } else {
+                    console.error('Failed to update patient');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function deletePatient(button) {
+        var patientId = button.getAttribute('data-id');
+        var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        var csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        if (confirm('Are you sure you want to delete this patient?')) {
+            var headers = new Headers();
+            headers.append(csrfHeader, csrfToken);
+
+            fetch('/patients/' + patientId, {
+                method: 'DELETE',
+                headers: headers
+            }).then(response => {
+                if (response.ok) {
+                    alert('Patient deleted successfully');
+                    window.location.reload();
+                } else {
+                    alert('Error deleting patient');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting patient');
+            });
+        }
+    }
 </script>
 </body>
 </html>

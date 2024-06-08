@@ -1,6 +1,6 @@
 package ma.cabinetdentaire.entity;
 
 public enum StatutEmploye {
-    ACTIVE,
-    NO_ACTIVE,
+    EN_ARRET_MALADIE,
+    EN_CONGET,
 }

@@ -25,9 +25,9 @@ public class ConsultationController {
 
     @Autowired
     private DossierMedicalsService dossierMedicaleService;
+
     @Autowired
     private FactureService factureService;
-
 
     @GetMapping
     public String getAllConsultations(Model model) {
@@ -45,7 +45,7 @@ public class ConsultationController {
         model.addAttribute("consultations", consultations);
         model.addAttribute("dossiersMedicales", dossiersMedicales);
         model.addAttribute("consultation", consultation);
-        return "treatments";
+        return "/treatments";
     }
 
     @GetMapping("/{id}")
@@ -61,6 +61,7 @@ public class ConsultationController {
             return "redirect:/treatments";
         }
     }
+
     @PostMapping
     public String createConsultation(@ModelAttribute("consultation") Consultation consultation) {
         if (consultation.getTypeConsultation() == null) {
@@ -68,11 +69,12 @@ public class ConsultationController {
         }
         Consultation savedConsultation = consultationService.save(consultation);
 
-        // Get the list of factures from the consultation
         List<Facture> factures = consultation.getFactures();
         if (factures != null) {
             for (Facture facture : factures) {
                 facture.setConsultation(savedConsultation);
+                double montantRestant = facture.getMontantTotale() - facture.getMontantPaye();
+                facture.setMontantRestant(montantRestant);
                 factureService.save(facture);
             }
         }
@@ -80,17 +82,13 @@ public class ConsultationController {
         return "redirect:/treatments";
     }
 
-
     @PutMapping("/{id}")
-    public String updateConsultation(@PathVariable Long id, @ModelAttribute("consultation") Consultation consultation) {
+    public String updateConsultation(@PathVariable Long id, @RequestBody Consultation consultation) {
         Optional<Consultation> existingConsultation = consultationService.findById(id);
-        if (consultation.getTypeConsultation() == null) {
-            consultation.setTypeConsultation(TypeConsultation.TEST);
-        }
         if (existingConsultation.isPresent()) {
+            consultation.setId(id);
             Consultation savedConsultation = consultationService.save(consultation);
             List<Facture> factures = savedConsultation.getFactures();
-            // Update the properties of the Facture instances
             factureService.saveAll(factures);
             return "redirect:/treatments";
         } else {
