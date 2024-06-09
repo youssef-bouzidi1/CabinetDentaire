@@ -14,6 +14,7 @@ public class SituationFinanciere {
     private LocalDate datePaiement;
 
     @ManyToOne
+    @JoinColumn(name = "dossier_medicale_id")
     private DossierMedicale dossierMedicale;
 
     @ManyToOne
